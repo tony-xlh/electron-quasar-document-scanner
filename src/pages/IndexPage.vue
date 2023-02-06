@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <DWT></DWT>
+    <DWT width="100%" height="100%"></DWT>
   </q-page>
 </template>
 
