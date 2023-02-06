@@ -10,15 +10,16 @@ const props = defineProps(['width','height','license']);
 const emit = defineEmits(['onWebTWAINReady']);
 const initialized = ref(false);
 const viewer = ref(null);
-const WebTWAINID = "dwtcontrolContainer";
+const ContainerId = "dwtcontrolContainer";
 let DWObject;
 
 const initDWT = () => {
   Dynamsoft.DWT.RegisterEvent('OnWebTwainReady', () => {
-    DWObject = Dynamsoft.DWT.GetWebTwain(WebTWAINID);
+    DWObject = Dynamsoft.DWT.GetWebTwain(ContainerId);
     if (viewer.value) {
       let ele = viewer.value as HTMLElement;
       if (props.width) {
+        console.log("set width: "+props.width);
         DWObject.Viewer.width = props.width;
         ele.style.width = props.width;
       }
@@ -35,7 +36,7 @@ const initDWT = () => {
   Dynamsoft.DWT.ResourcesPath = "assets/dwt-resources";
   Dynamsoft.DWT.Containers = [{
       WebTwainId: 'dwtObject',
-      ContainerId: WebTWAINID
+      ContainerId: ContainerId
   }];
   Dynamsoft.DWT.Load();
 }
