@@ -10,7 +10,7 @@
             expand-separator
             label="Scan Settings"
           >
-            Scan Settings
+          <q-select v-model="selectedScanner" :options="scanners" label="Selected Scanner" />
           </q-expansion-item>
           <q-expansion-item
             expand-separator
@@ -27,13 +27,24 @@
 <script setup lang="ts">
 import DWT from 'components/DWT.vue';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
+import { ref } from 'vue';
 let DWObject:WebTwain|undefined;
+const selectedScanner = ref(null);
+const scanners = ref([] as string[]);
+
+const loadScanners = () => {
+  if (DWObject) {
+    scanners.value = DWObject.GetSourceNames(false) as string[];
+  }
+}
+
 const onWebTWAINReady = (dwt:WebTwain) => {
   console.log("web twain ready");
   DWObject = dwt;
   console.log(DWObject);
-  DWObject.AcquireImage();
+  loadScanners();
 };
+
 </script>
 
 <style>
