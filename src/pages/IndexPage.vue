@@ -18,7 +18,7 @@
           >
           <div class="inner">
             <q-select v-model="selectedScanner" :options="scanners" label="Selected Scanner" />
-            <q-btn color="primary" label="Scan" v-on:click="scan" />
+            <q-btn class="button" color="primary" label="Scan" v-on:click="scan" />
           </div>
           </q-expansion-item>
           <q-expansion-item
@@ -27,7 +27,8 @@
             label="Save"
           >
             <div class="inner">
-              Save
+              <q-input outlined v-model="filename" label="Filename" />
+              <q-btn class="button" color="primary" label="Save" v-on:click="save" />
             </div>
           </q-expansion-item>
         </q-list>
@@ -49,6 +50,7 @@ const duplexEnabled = ref(false);
 const resolution = ref(200);
 const pixelType = ref(0);
 const scanners = ref([] as string[]);
+const filename = ref("Scanned");
 
 const loadScanners = () => {
   if (DWObject) {
@@ -75,6 +77,12 @@ const scan = () => {
   }
 }
 
+const save = () => {
+  if (DWObject) {
+    DWObject.SaveAllAsPDF(filename.value);
+  }
+}
+
 const onWebTWAINReady = (dwt:WebTwain) => {
   console.log("web twain ready");
   DWObject = dwt;
@@ -98,6 +106,10 @@ const onWebTWAINReady = (dwt:WebTwain) => {
 
 .inner {
   padding: 10px;
+}
+
+.button {
+  margin-top: 10px;
 }
 
 </style>
