@@ -1,7 +1,7 @@
 <template>
   <q-page class="index">
     <div class="row container">
-      <div class="col-8 left">
+      <div class="col-8" id="left">
         <div class="toolbar">
           <q-btn class="toolbar-btn" v-on:click="deleteSelected" icon="delete" />
           <q-btn class="toolbar-btn" v-on:click="edit" icon="edit" />
@@ -19,7 +19,7 @@
           </DWT>
         </div>
       </div>
-      <div class="col-4 right">
+      <div class="col-4" id="right">
         <q-list bordered class="rounded-borders">
           <q-expansion-item
             :model-value="true"
@@ -172,8 +172,9 @@ const onWebTWAINReady = (dwt:WebTwain) => {
   margin-top: 10px;
 }
 
-.left {
+#left {
   display: flex;
+  height: 100%;
 }
 
 .toolbar {
