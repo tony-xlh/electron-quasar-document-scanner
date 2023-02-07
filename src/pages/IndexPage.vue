@@ -177,6 +177,11 @@ const onWebTWAINReady = (dwt:WebTwain) => {
   height: 100%;
 }
 
+#right {
+  height: 100%;
+  overflow: auto;
+}
+
 .toolbar {
   width: 50px;
   height: 100%;
