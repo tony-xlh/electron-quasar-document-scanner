@@ -10,13 +10,28 @@
           <q-btn class="toolbar-btn" v-on:click="moveDown" icon="arrow_downward" />
         </div>
         <div class="dwt">
-          <DWT 
+          <DWT
+            ref="dwtElement" 
             width="100%" 
             height="100%" 
             cols="2"
             rows="2"
-            @onWebTWAINReady="onWebTWAINReady">
+            @onWebTWAINReady="onWebTWAINReady"
+            @onWebTWAINNotFound="onWebTWAINNotFound">
           </DWT>
+          <q-dialog v-model="confirm" persistent>
+            <q-card>
+              <q-card-section>
+                <div>Dynamsoft Service is not found. Please download and install it first.</div>
+                <div v-for="(installer, index) in serviceInstallers" :key="index">
+                  <div><a :href='`assets/dwt-resources/dist/${installer}`'>{{ installer }}</a></div>
+                </div>
+              </q-card-section>
+              <q-card-actions align="right">
+                <q-btn flat label="Reconnect to the service" color="primary" v-close-popup v-on:click="reconnect" />
+              </q-card-actions>
+            </q-card>
+          </q-dialog>
         </div>
       </div>
       <div class="col-4" id="right">
@@ -71,6 +86,8 @@ import DWT from 'components/DWT.vue';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
 import { DeviceConfiguration } from 'dwt/dist/types/WebTwain.Acquire';
 import { ref } from 'vue';
+import { Platform } from 'quasar'
+
 let DWObject:WebTwain|undefined;
 const selectedScanner = ref("");
 const showUI = ref(false);
@@ -80,6 +97,9 @@ const resolution = ref(200);
 const pixelType = ref(0);
 const scanners = ref([] as string[]);
 const filename = ref("Scanned");
+const confirm = ref(false);
+const dwtElement = ref<any>();
+const serviceInstallers = ref([] as string[]);
 
 const loadScanners = () => {
   if (DWObject) {
@@ -145,10 +165,30 @@ const moveDown = () => {
 
 const onWebTWAINReady = (dwt:WebTwain) => {
   console.log("web twain ready");
+  console.log(dwt);
   DWObject = dwt;
-  console.log(DWObject);
   loadScanners();
 };
+
+const onWebTWAINNotFound = () => {
+  console.log("web twain not found");
+  const platform = Platform.is.platform;
+  console.log(platform);
+  if (platform === 'win') {
+    serviceInstallers.value = ['DynamsoftServiceSetup.msi'];
+  }else if (platform === 'mac') {
+    serviceInstallers.value = ['DynamsoftServiceSetup.pkg'];
+  }else {
+    serviceInstallers.value = ['DynamsoftServiceSetup.rpm','DynamsoftServiceSetup.deb','DynamsoftServiceSetup-arm64.deb']; 
+  }
+  confirm.value = true;
+}
+
+const reconnect = () => {
+  if (dwtElement.value) {
+    dwtElement.value.reconnect();
+  }
+}
 
 </script>
 

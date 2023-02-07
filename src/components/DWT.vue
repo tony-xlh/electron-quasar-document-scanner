@@ -8,7 +8,7 @@ import Dynamsoft from 'dwt';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
 
 const props = defineProps(['width','height','cols','rows','license']);
-const emit = defineEmits(['onWebTWAINReady']);
+const emit = defineEmits(['onWebTWAINReady','onWebTWAINNotFound']);
 const viewer = ref(null);
 const ContainerId = 'dwtcontrolContainer';
 let DWObject:WebTwain|undefined;
@@ -23,6 +23,16 @@ const initDWT = () => {
   if (props.license) {
     Dynamsoft.DWT.ProductKey = props.license;
   }
+
+  const notfound = () => {
+    emit('onWebTWAINNotFound');
+  }
+
+  let DynamsoftAny:any = Dynamsoft;
+  DynamsoftAny.OnWebTwainNotFoundOnWindowsCallback = notfound;
+  DynamsoftAny.OnWebTwainNotFoundOnMacCallback = notfound;
+  DynamsoftAny.OnWebTwainNotFoundOnLinuxCallback = notfound;
+
   Dynamsoft.DWT.ResourcesPath = 'assets/dwt-resources';
   Dynamsoft.DWT.Containers = [{
       WebTwainId: 'dwtObject',
@@ -63,5 +73,26 @@ watch(() => [props.cols,props.rows], ([newCols,oldCols], [newRows,oldRows]) => {
   updateViewMode();
 });
 
+const reconnect = () => {
+  let dwtport = 18622;
+  let DynamsoftAny:any = Dynamsoft;
+  if (location.protocol == "http:") {
+    dwtport = DynamsoftAny.DWT.Port;
+  } else {
+    dwtport = DynamsoftAny.DWT.SSLPort;
+  }
+  DynamsoftAny.DWT.CheckConnectToTheService(Dynamsoft.DWT.Host,
+    dwtport, 
+    function () {
+      initDWT();
+    }, 
+    function () {
+      emit('onWebTWAINNotFound');
+    }
+  );
+}
 
+defineExpose({
+  reconnect
+})
 </script>
