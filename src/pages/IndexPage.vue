@@ -2,7 +2,12 @@
   <q-page class="index">
     <div class="row container">
       <div class="col-8 left">
-        <DWT width="100%" height="100%" @onWebTWAINReady="onWebTWAINReady"></DWT>
+        <DWT 
+          width="100%" 
+          height="100%" 
+          cols="2"
+          rows="2"
+          @onWebTWAINReady="onWebTWAINReady"></DWT>
       </div>
       <div class="col-4 right">
         <q-list bordered class="rounded-borders">
