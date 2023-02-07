@@ -8,15 +8,20 @@
         <q-list bordered class="rounded-borders">
           <q-expansion-item
             expand-separator
-            label="Scan Settings"
+            label="Scan"
           >
-          <q-select v-model="selectedScanner" :options="scanners" label="Selected Scanner" />
+          <div class="inner">
+            <q-select v-model="selectedScanner" :options="scanners" label="Selected Scanner" />
+            <q-btn color="primary" label="Scan" v-on:click="scan" />
+          </div>
           </q-expansion-item>
           <q-expansion-item
             expand-separator
             label="Save"
           >
-            Save
+            <div class="inner">
+              Save
+            </div>
           </q-expansion-item>
         </q-list>
       </div>
@@ -27,14 +32,39 @@
 <script setup lang="ts">
 import DWT from 'components/DWT.vue';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
+import { DeviceConfiguration } from 'dwt/dist/types/WebTwain.Acquire';
 import { ref } from 'vue';
 let DWObject:WebTwain|undefined;
-const selectedScanner = ref(null);
+const selectedScanner = ref("");
+const showUI = ref(false);
+const feederEnabled = ref(false);
+const duplexEnabled = ref(false);
+const resolution = ref(200);
+const pixelType = ref(0);
 const scanners = ref([] as string[]);
 
 const loadScanners = () => {
   if (DWObject) {
-    scanners.value = DWObject.GetSourceNames(false) as string[];
+    let sourceNames = DWObject.GetSourceNames(false) as string[]; 
+    scanners.value = sourceNames;
+    if (sourceNames.length > 0 ) {
+      selectedScanner.value = sourceNames[0];
+    }
+  }
+}
+
+const scan = () => {
+  if (DWObject) {
+    let selectedIndex = scanners.value.indexOf(selectedScanner.value);
+    let deviceConfiguration:DeviceConfiguration = {};
+      deviceConfiguration.IfShowUI = showUI.value;
+      deviceConfiguration.IfFeederEnabled = feederEnabled.value;
+      deviceConfiguration.IfDuplexEnabled = duplexEnabled.value;
+      deviceConfiguration.SelectSourceByIndex = selectedIndex;
+      deviceConfiguration.Resolution = resolution.value;
+      deviceConfiguration.PixelType = pixelType.value;
+      console.log(deviceConfiguration);
+      DWObject.AcquireImage(deviceConfiguration);
   }
 }
 
@@ -58,4 +88,9 @@ const onWebTWAINReady = (dwt:WebTwain) => {
   padding: 10px;
   position: absolute;
 }
+
+.inner {
+  padding: 10px;
+}
+
 </style>
