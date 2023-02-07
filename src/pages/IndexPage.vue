@@ -225,6 +225,7 @@ const reconnect = () => {
 .toolbar {
   width: 50px;
   height: 100%;
+  overflow: auto;
   padding: 5px;
   font-size: 21px;
   border: 1px solid #d9d9d9;

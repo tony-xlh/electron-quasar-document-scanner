@@ -76,12 +76,10 @@ watch(() => [props.cols,props.rows], ([newCols,oldCols], [newRows,oldRows]) => {
 const reconnect = () => {
   let dwtport = 18622;
   let DynamsoftAny:any = Dynamsoft;
-  if (location.protocol == "http:") {
-    dwtport = DynamsoftAny.DWT.Port;
-  } else {
-    dwtport = DynamsoftAny.DWT.SSLPort;
+  if (location.protocol == "https:") {
+    dwtport = 18623;
   }
-  DynamsoftAny.DWT.CheckConnectToTheService(Dynamsoft.DWT.Host,
+  DynamsoftAny.DWT.CheckConnectToTheService("127.0.0.1",
     dwtport, 
     function () {
       initDWT();
