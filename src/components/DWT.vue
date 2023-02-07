@@ -9,7 +9,6 @@ import { WebTwain } from 'dwt/dist/types/WebTwain';
 
 const props = defineProps(['width','height','cols','rows','license']);
 const emit = defineEmits(['onWebTWAINReady']);
-const initialized = ref(false);
 const viewer = ref(null);
 const ContainerId = "dwtcontrolContainer";
 let DWObject:WebTwain|undefined;
@@ -33,8 +32,6 @@ const initDWT = () => {
 }
 
 onMounted(async () => {
-  console.log("mounted");
-  console.log(viewer.value);
   initDWT();
 });
 
@@ -42,7 +39,6 @@ const resizeViewer = () => {
   if (viewer.value && DWObject) {
     let ele = viewer.value as HTMLElement;
     if (props.width) {
-      console.log("set width: "+props.width);
       DWObject.Viewer.width = props.width;
       ele.style.width = props.width;
     }
