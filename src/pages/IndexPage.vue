@@ -168,6 +168,7 @@ const onWebTWAINReady = (dwt:WebTwain) => {
   console.log(dwt);
   DWObject = dwt;
   loadScanners();
+  recognize();
 };
 
 const onWebTWAINNotFound = () => {
@@ -188,6 +189,12 @@ const reconnect = () => {
   if (dwtElement.value) {
     dwtElement.value.reconnect();
   }
+}
+
+const recognize = async () => {
+  let windowAny = window as any;
+  let text = await windowAny.myAPI.recognize("C:\\Users\\admin\\Pictures\\17-damaged-barcodes.png")
+  console.log(text);
 }
 
 </script>
