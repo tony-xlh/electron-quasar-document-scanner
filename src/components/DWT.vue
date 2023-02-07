@@ -1,8 +1,8 @@
 <template>
-  <div ref="viewer" id="dwtcontrolContainer"></div>
+  <div ref='viewer' id='dwtcontrolContainer'></div>
 </template>
 
-<script setup lang="ts">
+<script setup lang='ts'>
 import { onMounted, ref, watch } from 'vue';
 import Dynamsoft from 'dwt';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
@@ -10,7 +10,7 @@ import { WebTwain } from 'dwt/dist/types/WebTwain';
 const props = defineProps(['width','height','cols','rows','license']);
 const emit = defineEmits(['onWebTWAINReady']);
 const viewer = ref(null);
-const ContainerId = "dwtcontrolContainer";
+const ContainerId = 'dwtcontrolContainer';
 let DWObject:WebTwain|undefined;
 
 const initDWT = () => {
@@ -18,12 +18,12 @@ const initDWT = () => {
     DWObject = Dynamsoft.DWT.GetWebTwain(ContainerId);
     resizeViewer();
     updateViewMode();
-    emit("onWebTWAINReady",DWObject);
+    emit('onWebTWAINReady',DWObject);
   });
   if (props.license) {
     Dynamsoft.DWT.ProductKey = props.license;
   }
-  Dynamsoft.DWT.ResourcesPath = "assets/dwt-resources";
+  Dynamsoft.DWT.ResourcesPath = 'assets/dwt-resources';
   Dynamsoft.DWT.Containers = [{
       WebTwainId: 'dwtObject',
       ContainerId: ContainerId
