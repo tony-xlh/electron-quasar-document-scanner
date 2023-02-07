@@ -12,6 +12,7 @@
       <div class="col-4 right">
         <q-list bordered class="rounded-borders">
           <q-expansion-item
+            :model-value="true"
             expand-separator
             label="Scan"
           >
@@ -21,6 +22,7 @@
           </div>
           </q-expansion-item>
           <q-expansion-item
+            :model-value="true"
             expand-separator
             label="Save"
           >
