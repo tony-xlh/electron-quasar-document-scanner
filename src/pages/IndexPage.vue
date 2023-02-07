@@ -18,6 +18,25 @@
           >
           <div class="inner">
             <q-select v-model="selectedScanner" :options="scanners" label="Selected Scanner" />
+            <q-checkbox left-label v-model="showUI" label="Show UI" />
+            <q-checkbox left-label v-model="feederEnabled" label="Auto Feeder" />
+            <q-checkbox left-label v-model="duplexEnabled" label="Duplex" />
+            <q-input
+              v-model.number="resolution"
+              type="number"
+              style="max-width: 200px"
+            >
+            <template v-slot:before>
+              <span style="font-size: 14px;color: black;">Resolution:</span>
+            </template>
+            </q-input>
+            <div>
+              <span>Pixel Type:</span>
+              <q-radio v-model="pixelType" val="0" label="B&W" />
+              <q-radio v-model="pixelType" val="1" label="Gray" />
+              <q-radio v-model="pixelType" val="2" label="Color" />
+            </div>
+            
             <q-btn outline class="button" color="black" label="Scan" v-on:click="scan" />
           </div>
           </q-expansion-item>
