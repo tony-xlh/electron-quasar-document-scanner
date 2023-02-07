@@ -8,6 +8,28 @@
           <q-btn class="toolbar-btn" v-on:click="rotate" icon="rotate_right" />
           <q-btn class="toolbar-btn" v-on:click="moveUp" icon="arrow_upward" />
           <q-btn class="toolbar-btn" v-on:click="moveDown" icon="arrow_downward" />
+          <div v-if="isElectron">
+            <q-dialog v-model="showOCRResult">
+              <q-card>
+                <q-card-section>
+                  <div class="text-h6">Result</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                  <pre>
+                    {{OCRResult}}
+                  </pre>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                  <q-btn flat label="OK" color="primary" v-close-popup />
+                </q-card-actions>
+              </q-card>
+            </q-dialog>
+          </div>
+          <q-btn v-if="isElectron" class="toolbar-btn" v-on:click="recognizeSelected">
+            <img :src="OCR"/>
+          </q-btn>
         </div>
         <div class="dwt">
           <DWT
@@ -85,8 +107,9 @@
 import DWT from 'components/DWT.vue';
 import { WebTwain } from 'dwt/dist/types/WebTwain';
 import { DeviceConfiguration } from 'dwt/dist/types/WebTwain.Acquire';
-import { ref } from 'vue';
-import { Platform } from 'quasar'
+import { onMounted, ref } from 'vue';
+import { Platform } from 'quasar';
+import OCR from '../assets/ocr.svg';
 
 let DWObject:WebTwain|undefined;
 const selectedScanner = ref("");
@@ -100,6 +123,15 @@ const filename = ref("Scanned");
 const confirm = ref(false);
 const dwtElement = ref<any>();
 const serviceInstallers = ref([] as string[]);
+const isElectron = ref(false);
+const OCRResult = ref("");
+const showOCRResult = ref(false);
+
+onMounted(async () => {
+  if (Platform.is.electron) {
+    isElectron.value = true;
+  }
+});
 
 const loadScanners = () => {
   if (DWObject) {
@@ -168,7 +200,6 @@ const onWebTWAINReady = (dwt:WebTwain) => {
   console.log(dwt);
   DWObject = dwt;
   loadScanners();
-  recognize();
 };
 
 const onWebTWAINNotFound = () => {
@@ -191,10 +222,25 @@ const reconnect = () => {
   }
 }
 
-const recognize = async () => {
-  let windowAny = window as any;
-  let text = await windowAny.myAPI.recognize("C:\\Users\\admin\\Pictures\\17-damaged-barcodes.png")
-  console.log(text);
+const recognizeSelected = async () => {
+  if (DWObject) {
+    DWObject.IfShowFileDialog = false;
+    let windowAny = window as any;
+    let imgPath = windowAny.myAPI.tmpDir() + "/out.bmp";
+    console.log(imgPath);
+    DWObject.SaveAsBMP(imgPath,DWObject.CurrentImageIndexInBuffer,
+    function() {
+      const OCR = async () => {
+        let text = await windowAny.myAPI.recognize(imgPath);
+        OCRResult.value = text;
+        showOCRResult.value = true;
+      }
+      OCR();
+    },
+    function() {
+      console.log("failed");
+    });
+  }
 }
 
 </script>

@@ -30,10 +30,12 @@
 
 import { contextBridge } from 'electron'
 const tesseract = require('tesseractocr')
+const os = require('os');
 
 contextBridge.exposeInMainWorld('myAPI', {
   platform: () => process.platform,
-  recognize: recognize
+  recognize: recognize,
+  tmpDir: () => os.tmpdir()
 })
 
 async function recognize(path:string){
