@@ -18,7 +18,7 @@
           >
           <div class="inner">
             <q-select v-model="selectedScanner" :options="scanners" label="Selected Scanner" />
-            <q-btn class="button" color="primary" label="Scan" v-on:click="scan" />
+            <q-btn outline class="button" color="black" label="Scan" v-on:click="scan" />
           </div>
           </q-expansion-item>
           <q-expansion-item
@@ -28,7 +28,7 @@
           >
             <div class="inner">
               <q-input outlined v-model="filename" label="Filename" />
-              <q-btn class="button" color="primary" label="Save" v-on:click="save" />
+              <q-btn outline class="button" color="black" label="Save as PDF" v-on:click="save" />
             </div>
           </q-expansion-item>
         </q-list>
