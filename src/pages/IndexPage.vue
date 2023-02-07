@@ -226,9 +226,15 @@ const recognizeSelected = async () => {
   if (DWObject) {
     DWObject.IfShowFileDialog = false;
     let windowAny = window as any;
-    let imgPath = windowAny.myAPI.tmpDir() + "/out.bmp";
+    let imgPath = windowAny.myAPI.tmpDir() + "/out.jpg";
     console.log(imgPath);
-    DWObject.SaveAsBMP(imgPath,DWObject.CurrentImageIndexInBuffer,
+    //If the current image is B&W
+    //1 is B&W, 8 is Gray, 24 is RGB
+    if (DWObject.GetImageBitDepth(DWObject.CurrentImageIndexInBuffer) == 1) {
+      //If so, convert the image to Gray
+      DWObject.ConvertToGrayScale(DWObject.CurrentImageIndexInBuffer);
+    }
+    DWObject.SaveAsJPEG(imgPath,DWObject.CurrentImageIndexInBuffer,
     function() {
       const OCR = async () => {
         let text = await windowAny.myAPI.recognize(imgPath);
