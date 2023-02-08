@@ -1,4 +1,4 @@
-# Document Scanner (document-scanner)
+# Document Scanner
 
 A desktop document scanner using Quasar/Vue/Electron.
 
@@ -40,6 +40,23 @@ npm run format
 ```bash
 npm run build
 ```
+
+### Run as an Electron App
+
+1. Dev mode:
+
+   ```bash
+   quasar dev -m electron
+   ```
+
+2. Build a production version:
+
+   ```bash
+   quasar build -m electron
+   ```
+   
+Remember to run `npm run start` beforehand.
+
 
 ### Customize the configuration
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
