@@ -16,6 +16,8 @@ let DWObject:WebTwain|undefined;
 const initDWT = () => {
   Dynamsoft.DWT.RegisterEvent('OnWebTwainReady', () => {
     DWObject = Dynamsoft.DWT.GetWebTwain(ContainerId);
+    DWObject.Viewer.width = "100%";
+    DWObject.Viewer.height = "100%";
     resizeViewer();
     updateViewMode();
     emit('onWebTWAINReady',DWObject);
@@ -49,11 +51,9 @@ const resizeViewer = () => {
   if (viewer.value && DWObject) {
     let ele = viewer.value as HTMLElement;
     if (props.width) {
-      DWObject.Viewer.width = props.width;
       ele.style.width = props.width;
     }
     if (props.height) {
-      DWObject.Viewer.height = props.height;
       ele.style.height = props.height;
     }
   }
